@@ -1,4 +1,6 @@
-import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Account } from "../../account/models/account.model";
+import { UserAccount } from "../../account/models/user-accounts.model";
 
 @Table({
   timestamps: true,
@@ -26,7 +28,7 @@ export class User extends Model {
 
   @Column({field: 'updated_at'})
   updatedAt: Date;
-  //
-  // @HasMany(() => Budget)
-  // budgets: Budget[];
+
+  @BelongsToMany(() => Account, () => UserAccount)
+  accounts: Account[];
 }

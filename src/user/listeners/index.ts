@@ -1,6 +1,6 @@
 import { HandlersMapNode } from "nest-event-sourcing/dist/module/interfaces";
 import { UserCreatedEvent } from "../events";
-import { UserProjector } from "./user-projector";
+import { UserProjector } from "./user.projector";
 
 export const handlers: HandlersMapNode[] = [
   {

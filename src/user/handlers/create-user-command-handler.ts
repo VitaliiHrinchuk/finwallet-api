@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateUserCommand } from "../commands";
 import { EventSourcedRepository } from "nest-event-sourcing";
 import { UserAggregateRoot } from "../domain";
-import { ValidationException } from "../../exceptions";
+import { ValidationException } from "../../../exceptions";
 import * as bcrypt from 'bcrypt';
 
 @CommandHandler(CreateUserCommand)
