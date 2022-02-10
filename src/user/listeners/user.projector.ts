@@ -1,5 +1,5 @@
 import { Projector } from "nest-event-sourcing";
-import { UserCreatedEvent } from "../events";
+import { UserCreated } from "../events";
 import { InjectModel } from "@nestjs/sequelize";
 import { User } from "../models/user.model";
 import { CqrsModule } from "@nestjs/cqrs";
@@ -12,7 +12,7 @@ export class UserProjector extends Projector {
     super();
   }
 
-  async applyUserCreated(event: UserCreatedEvent) {
+  async applyUserCreated(event: UserCreated) {
     console.log('event', event);
 
     await this.users.create({
