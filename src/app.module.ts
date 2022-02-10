@@ -7,6 +7,10 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from "./auth/auth.module";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { User } from "./user/models/user.model";
+import { AccountModule } from './account/account.module';
+import { Account } from "./account/models/account.model";
+import { UserAccount } from "./account/models/user-accounts.model";
+import { ConsoleModule } from "nestjs-console";
 
 @Module({
   imports: [
@@ -22,13 +26,12 @@ import { User } from "./user/models/user.model";
           username: configService.get<string>("DB_USERNAME"),
           password: configService.get<string>("DB_PASSWORD"),
           database: configService.get<string>("DB_NAME"),
-          models: [User]
+          models: [User, Account, UserAccount]
         };
       }
     }),
     EventSourcingModule.forRootAsync({
       useFactory: async (config: ConfigService) => {
-        console.log(config.get<string>("PASS"));
         return {
           driver: new PgAdapter({
             port: config.get<number>("ES_PORT"),
@@ -43,7 +46,9 @@ import { User } from "./user/models/user.model";
     }),
 
     UserModule,
-    AuthModule
+    AuthModule,
+    AccountModule,
+    ConsoleModule
   ],
   controllers: [AppController],
   providers: [AppService],

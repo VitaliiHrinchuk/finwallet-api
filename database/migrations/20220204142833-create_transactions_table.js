@@ -16,6 +16,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DOUBLE
       },
+      account_currency_amount: {
+        allowNull: false,
+        type: Sequelize.DOUBLE
+      },
       transaction_type: {
         allowNull: false,
         type: Sequelize.STRING(3)
