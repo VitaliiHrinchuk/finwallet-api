@@ -11,6 +11,8 @@ import { AccountModule } from './account/account.module';
 import { Account } from "./account/models/account.model";
 import { UserAccount } from "./account/models/user-accounts.model";
 import { ConsoleModule } from "nestjs-console";
+import { CategoryModule } from './category/category.module';
+import { Category } from "./category/models/category.model";
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { ConsoleModule } from "nestjs-console";
           username: configService.get<string>("DB_USERNAME"),
           password: configService.get<string>("DB_PASSWORD"),
           database: configService.get<string>("DB_NAME"),
-          models: [User, Account, UserAccount]
+          models: [User, Account, UserAccount, Category]
         };
       }
     }),
@@ -48,7 +50,8 @@ import { ConsoleModule } from "nestjs-console";
     UserModule,
     AuthModule,
     AccountModule,
-    ConsoleModule
+    ConsoleModule,
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [AppService],

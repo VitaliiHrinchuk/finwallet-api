@@ -1,6 +1,7 @@
-import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import { Account } from "../../account/models/account.model";
 import { UserAccount } from "../../account/models/user-accounts.model";
+import { Category } from "../../category/models/category.model";
 
 @Table({
   timestamps: true,
@@ -31,4 +32,7 @@ export class User extends Model {
 
   @BelongsToMany(() => Account, () => UserAccount)
   accounts: Account[];
+
+  @HasMany(() => Category)
+  categories: Category[];
 }
