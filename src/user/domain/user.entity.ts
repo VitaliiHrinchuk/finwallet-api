@@ -13,6 +13,9 @@ export class UserEntity {
   @Type(() => AccountEntity)
   accounts: AccountEntity[] = [];
 
+  @Exclude()
+  UserAccount: any;
+
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);
   }

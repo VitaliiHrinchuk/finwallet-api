@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Exclude, Type } from "class-transformer";
 import { UserEntity } from "../../user/domain/user.entity";
 
 export class AccountEntity {
@@ -15,4 +15,12 @@ export class AccountEntity {
 
   @Type(() => UserEntity)
   createdBy: UserEntity;
+
+  @Exclude()
+  UserAccount: any;
+
+
+  constructor(partial: Partial<AccountEntity>) {
+    Object.assign(this, partial);
+  }
 }

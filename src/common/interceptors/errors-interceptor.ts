@@ -7,7 +7,7 @@ import {
   NotFoundException
 } from "@nestjs/common";
 import { catchError, Observable } from "rxjs";
-import { EntityNotFoundException, ValidationException } from "../exceptions";
+import { AccessDeniedException, EntityNotFoundException, ValidationException } from "../exceptions";
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
@@ -19,6 +19,8 @@ export class ErrorsInterceptor implements NestInterceptor {
           throw new BadRequestException(error.toArray());
         } else if (error instanceof EntityNotFoundException) {
           throw new NotFoundException(error.message);
+        } else if (error instanceof AccessDeniedException) {
+          throw new BadRequestException(error.message);
         } else {
           throw error;
         }
