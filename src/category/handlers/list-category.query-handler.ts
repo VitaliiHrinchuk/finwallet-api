@@ -15,12 +15,10 @@ export class ListCategoryQueryHandler implements ICommandHandler<ListCategoryQue
     ) {}
 
   async execute(command: ListCategoryQuery): Promise<any> {
+    const filters = this.createFilters(command);
+
     const categoryModels = await this.categories.findAll({
-      where: {
-        createdBy: {
-          [Op.or]: [command.userId, null]
-        }
-      },
+      where: filters,
       include: [
         {
           model: User,
@@ -29,5 +27,19 @@ export class ListCategoryQueryHandler implements ICommandHandler<ListCategoryQue
     });
 
     return categoryModels.map(model => new CategoryEntity(model.toJSON()));
+  }
+
+  private createFilters(command: ListCategoryQuery): any {
+    const filters: any = {
+      createdBy: {
+        [Op.or]: [command.dto.userId, null]
+      }
+    };
+
+    if (command.dto.categoryType) {
+      filters.categoryType = command.dto.categoryType;
+    }
+
+    return filters;
   }
 }

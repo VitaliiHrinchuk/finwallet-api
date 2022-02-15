@@ -1,6 +1,8 @@
+import { ListCategoryDto } from "../dto/list-category.dto";
+
 export class ListCategoryQuery {
   constructor(
-    public readonly userId: string
+    public readonly dto: ListCategoryDto
   ) {
   }
 }

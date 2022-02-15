@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Request,
+  UseGuards,
+  UseInterceptors
+} from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { SetUserIdInterceptor } from "../common/interceptors/set-user-id-interceptor";
@@ -11,6 +23,7 @@ import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { DeleteCategoryCommand } from "./commands/delete-category.command";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { UpdateCategoryCommand } from "./commands/update-category.command";
+import { ListCategoryDto } from "./dto/list-category.dto";
 
 
 @Controller('category')
@@ -27,8 +40,9 @@ export class CategoryController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async browse(@Request() req) {
-    return this.commandBus.execute(new ListCategoryQuery(req.user.userId));
+  @UseInterceptors(SetUserIdInterceptor)
+  async browse(@Query() listCategoryDto: ListCategoryDto) {
+    return this.commandBus.execute(new ListCategoryQuery(listCategoryDto));
   }
 
   @Get(':id')
