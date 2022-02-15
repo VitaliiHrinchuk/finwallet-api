@@ -2,6 +2,7 @@ import { BelongsTo, BelongsToMany, Column, DataType, HasMany, Model, Table } fro
 import { Account } from "../../account/models/account.model";
 import { UserAccount } from "../../account/models/user-accounts.model";
 import { Category } from "../../category/models/category.model";
+import { Tag } from "../../tag/models/tag.model";
 
 @Table({
   timestamps: true,
@@ -35,4 +36,7 @@ export class User extends Model {
 
   @HasMany(() => Category)
   categories: Category[];
+
+  @HasMany(() => Tag)
+  tags: Tag[];
 }

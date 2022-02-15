@@ -1,17 +1,15 @@
 import { Module } from '@nestjs/common';
-import { CategoryController } from './category.controller';
 import { SequelizeModule } from "@nestjs/sequelize";
 import { CqrsModule } from "@nestjs/cqrs";
 import { EventSourcingModule } from "nest-event-sourcing";
-import { Category } from "./models/category.model";
+import { Tag } from "./models/tag.model";
 import { eventHandlers, handlersMapNodes } from "./listeners";
 import { commandHandlers } from "./handlers";
-
-
+import { TagController } from './tag.controller';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Category]),
+    SequelizeModule.forFeature([Tag]),
     CqrsModule,
     EventSourcingModule.forFeature(handlersMapNodes),
   ],
@@ -19,7 +17,6 @@ import { commandHandlers } from "./handlers";
     ...commandHandlers,
     ...eventHandlers
   ],
-
-  controllers: [CategoryController]
+  controllers: [TagController],
 })
-export class CategoryModule {}
+export class TagModule {}

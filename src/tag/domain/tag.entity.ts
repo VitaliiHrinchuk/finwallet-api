@@ -1,7 +1,7 @@
 import { Exclude, Type } from "class-transformer";
 import { UserEntity } from "../../user/domain/user.entity";
 
-export class CategoryEntity {
+export class TagEntity {
   id: string;
   name: string;
   slug: string;
@@ -12,11 +12,11 @@ export class CategoryEntity {
   @Type(() => UserEntity)
   owner: UserEntity;
 
-  constructor(partial: Partial<CategoryEntity>) {
+  constructor(partial: Partial<TagEntity>) {
     Object.assign(this, partial);
   }
 
-  static fromJSON(partial: Partial<CategoryEntity>): CategoryEntity {
-    return new CategoryEntity(partial)
+  static fromJSON(partial: Partial<TagEntity>) {
+    return new TagEntity(partial)
   }
 }

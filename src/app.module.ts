@@ -13,6 +13,8 @@ import { UserAccount } from "./account/models/user-accounts.model";
 import { ConsoleModule } from "nestjs-console";
 import { CategoryModule } from './category/category.module';
 import { Category } from "./category/models/category.model";
+import { TagModule } from './tag/tag.module';
+import { Tag } from "./tag/models/tag.model";
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { Category } from "./category/models/category.model";
           username: configService.get<string>("DB_USERNAME"),
           password: configService.get<string>("DB_PASSWORD"),
           database: configService.get<string>("DB_NAME"),
-          models: [User, Account, UserAccount, Category]
+          models: [User, Account, UserAccount, Category, Tag]
         };
       }
     }),
@@ -51,7 +53,8 @@ import { Category } from "./category/models/category.model";
     AuthModule,
     AccountModule,
     ConsoleModule,
-    CategoryModule
+    CategoryModule,
+    TagModule
   ],
   controllers: [AppController],
   providers: [AppService],

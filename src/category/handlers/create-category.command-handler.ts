@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { InjectModel } from "@nestjs/sequelize";
 import { Category } from "../models/category.model";
 import { ValidationException } from "../../common/exceptions";
+import { strToSnakeCase } from "../../common/helpers/str-to-snake-case";
+import { CategoryEntity } from "../domain/category.entity";
 
 @CommandHandler(CreateCategoryCommand)
 export class CreateCategoryCommandHandler implements ICommandHandler<CreateCategoryCommand> {
@@ -29,7 +31,11 @@ export class CreateCategoryCommandHandler implements ICommandHandler<CreateCateg
       command.dto.userId,
     );
 
-    return this.repository.save(category);
+    await this.repository.save(category);
+
+    const instance: Category = await this.categories.findByPk(category.getId());
+
+    return CategoryEntity.fromJSON(instance.toJSON());
   }
 
   async validate(command: CreateCategoryCommand): Promise<void> {
@@ -47,6 +53,6 @@ export class CreateCategoryCommandHandler implements ICommandHandler<CreateCateg
   }
 
   private generateSlug(name): string {
-    return name.split(' ').map(str=> str.toLowerCase()).join('_')
+    return strToSnakeCase(name);
   }
 }

@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:undo": "sequelize db:migrate:undo:all",
     "db:migrate": "sequelize db:migrate",
-    "replay:es": "npm run db:undo && npm run db:migrate && ts-node -r tsconfig-paths/register cli/replay.ts"
+    "es:replay": "npm run db:undo && npm run db:migrate && ts-node -r tsconfig-paths/register cli/replay.ts"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

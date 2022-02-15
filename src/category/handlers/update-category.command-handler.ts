@@ -6,6 +6,8 @@ import { UpdateCategoryCommand } from "../commands/update-category.command";
 import { AccessDeniedException, EntityNotFoundException, ValidationException } from "../../common/exceptions";
 import { InjectModel } from "@nestjs/sequelize";
 import {  Category } from "../models/category.model";
+import { strToSnakeCase } from "../../common/helpers/str-to-snake-case";
+import { CategoryEntity } from "../domain/category.entity";
 
 @CommandHandler(UpdateCategoryCommand)
 export class UpdateCategoryCommandHandler implements ICommandHandler<UpdateCategoryCommand> {
@@ -27,8 +29,11 @@ export class UpdateCategoryCommandHandler implements ICommandHandler<UpdateCateg
       slug,
     );
 
+    await this.repository.save(category);
 
-    return this.repository.save(category);
+    const instance: Category = await this.categories.findByPk(category.getId());
+
+    return CategoryEntity.fromJSON(instance.toJSON());
   }
 
   async validate(command: UpdateCategoryCommand): Promise<void> {
@@ -58,6 +63,6 @@ export class UpdateCategoryCommandHandler implements ICommandHandler<UpdateCateg
   }
 
   private generateSlug(name): string {
-    return name.split(' ').map(str=> str.toLowerCase()).join('_')
+    return strToSnakeCase(name);
   }
 }

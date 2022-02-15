@@ -12,6 +12,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(255)
       },
+      slug: {
+        allowNull: false,
+        type: Sequelize.STRING(255)
+      },
       created_by: {
         allowNull: true,
         type: Sequelize.UUID,
