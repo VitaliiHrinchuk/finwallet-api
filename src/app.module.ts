@@ -15,6 +15,7 @@ import { CategoryModule } from './category/category.module';
 import { Category } from "./category/models/category.model";
 import { TagModule } from './tag/tag.module';
 import { Tag } from "./tag/models/tag.model";
+import { CurrencyModule } from './currency/currency.module';
 
 @Module({
   imports: [
@@ -54,7 +55,8 @@ import { Tag } from "./tag/models/tag.model";
     AccountModule,
     ConsoleModule,
     CategoryModule,
-    TagModule
+    TagModule,
+    CurrencyModule
   ],
   controllers: [AppController],
   providers: [AppService],
