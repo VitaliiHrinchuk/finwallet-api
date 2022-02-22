@@ -1,11 +1,16 @@
 import { Exclude, Type } from "class-transformer";
 import { UserEntity } from "../../user/domain/user.entity";
 
+export enum CategoryType {
+  DEB,
+  CRE
+}
+
 export class CategoryEntity {
   id: string;
   name: string;
   slug: string;
-  categoryType: number
+  categoryType: CategoryType;
   createdAt: Date;
   updatedAt: Date;
 

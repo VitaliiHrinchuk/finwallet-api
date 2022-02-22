@@ -25,7 +25,7 @@ export class ShowCategoryQueryHandler implements ICommandHandler<ShowCategoryQue
         }
       ]
     });
-
-    return new CategoryEntity(categoryModel.toJSON());
+    console.log(typeof CategoryEntity.fromJSON(categoryModel.toJSON()).categoryType);
+    return CategoryEntity.fromJSON(categoryModel.toJSON());
   }
 }

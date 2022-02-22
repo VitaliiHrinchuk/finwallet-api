@@ -7,6 +7,8 @@ import { AccountSetUser } from "../events/account-set-user.event";
 import { UserAccount } from "../models/user-accounts.model";
 import { AccountDeleted } from "../events/account-deleted.event";
 import { AccountUpdated } from "../events/account-updated.event";
+import { AccountCredited } from "../events/account-credited.event";
+import { AccountDebited } from "../events/account-debited.event";
 
 @Injectable()
 export class AccountProjector extends Projector {
@@ -60,6 +62,22 @@ export class AccountProjector extends Projector {
 
     account.name = event.payload.name;
     account.hexColor = event.payload.hexColor;
+
+    await account.save();
+  }
+
+  async applyAccountCredited(event: AccountCredited) {
+    const account: Account = await this.loadInstance(event);
+
+    account.amount = account.amount - event.payload.amount;
+
+    await account.save();
+  }
+
+  async applyAccountDebited(event: AccountDebited) {
+    const account: Account = await this.loadInstance(event);
+
+    account.amount = account.amount + event.payload.amount;
 
     await account.save();
   }

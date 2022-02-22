@@ -6,6 +6,7 @@ import { EventSourcingModule } from "nest-event-sourcing";
 import { Category } from "./models/category.model";
 import { eventHandlers, handlersMapNodes } from "./listeners";
 import { commandHandlers } from "./handlers";
+import { CategoryMatchTypeRule } from "./rules/category-match-type.rule";
 
 
 
@@ -17,7 +18,8 @@ import { commandHandlers } from "./handlers";
   ],
   providers: [
     ...commandHandlers,
-    ...eventHandlers
+    ...eventHandlers,
+    CategoryMatchTypeRule
   ],
 
   controllers: [CategoryController]

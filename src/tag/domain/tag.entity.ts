@@ -12,6 +12,9 @@ export class TagEntity {
   @Type(() => UserEntity)
   owner: UserEntity;
 
+  @Exclude()
+  TransactionTag: any;
+
   constructor(partial: Partial<TagEntity>) {
     Object.assign(this, partial);
   }

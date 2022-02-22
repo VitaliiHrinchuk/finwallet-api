@@ -27,7 +27,7 @@ export class CreateCategoryCommandHandler implements ICommandHandler<CreateCateg
     category.create(
       command.dto.name,
       slug,
-      command.dto.categoryType,
+      command.dto.categoryType.toString(),
       command.dto.userId,
     );
 

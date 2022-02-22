@@ -6,6 +6,7 @@ import { Tag } from "./models/tag.model";
 import { eventHandlers, handlersMapNodes } from "./listeners";
 import { commandHandlers } from "./handlers";
 import { TagController } from './tag.controller';
+import { TagsExistRule } from "./rules/tags-exist.rule";
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { TagController } from './tag.controller';
   ],
   providers: [
     ...commandHandlers,
-    ...eventHandlers
+    ...eventHandlers,
+    TagsExistRule
   ],
   controllers: [TagController],
 })

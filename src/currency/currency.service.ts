@@ -1,5 +1,6 @@
 import { Injectable, StreamableFile } from "@nestjs/common";
 import { CurrencyRepository } from "./currency.repository";
+import { CurrencyRates } from "./currency.types";
 
 @Injectable()
 export class CurrencyService {

@@ -1,5 +1,5 @@
 import {
-  IsEmail, IsEnum,
+  IsEmail,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -9,17 +9,14 @@ import {
   Length,
   MinLength
 } from "class-validator";
-import { CategoryType } from "../domain/category.entity";
 
-export class CreateCategoryDto {
+export class DeleteTransactionDto {
   @IsNotEmpty()
   @IsUUID()
   userId: string;
 
   @IsNotEmpty()
-  name: string;
+  @IsUUID()
+  id: string;
 
-  @IsEnum(CategoryType)
-  @IsNotEmpty()
-  categoryType: CategoryType;
 }

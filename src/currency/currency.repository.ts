@@ -1,6 +1,9 @@
 import { CurrencyApiInterface } from "./api/CurrencyApiInterface";
-import fs from "fs";
+import * as fs from "fs";
+import { CurrencyRates } from "./currency.types";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class CurrencyRepository {
   constructor(private readonly currencyApi: CurrencyApiInterface) {}
 
@@ -24,7 +27,7 @@ export class CurrencyRepository {
 
     return new Promise((resolve, reject) => {
       const filePath = this._getLocalFilePath(base);
-      console.log('saved to ' + filePath);
+
       fs.writeFile(filePath, JSON.stringify(result), (err) => {
         if (err) {
           console.log('error is', err);

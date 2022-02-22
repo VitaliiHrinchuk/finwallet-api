@@ -17,7 +17,7 @@ import { CqrsModule } from "@nestjs/cqrs";
       useFactory: async (configService: ConfigService) => {
         return {
           secret: configService.get<string>("JWT_SECRET"),
-          signOptions: { expiresIn: "33600s" }
+          signOptions: { expiresIn: "333600s" }
         };
       },
       inject: [ConfigService]

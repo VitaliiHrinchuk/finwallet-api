@@ -7,6 +7,8 @@ import { AccountController } from './account.controller';
 import { commandHandlers } from "./handlers";
 import { EventSourcingModule } from "nest-event-sourcing";
 import { eventHandlers, handlersMapNodes } from "./listeners";
+import { AccountExistsRule } from "./rules/account-exists.rule";
+import { IsAccountOwnerRule } from "./rules/is-account-owner.rule";
 
 @Module({
   imports: [
@@ -16,7 +18,9 @@ import { eventHandlers, handlersMapNodes } from "./listeners";
   ],
   providers: [
     ...commandHandlers,
-    ...eventHandlers
+    ...eventHandlers,
+    AccountExistsRule,
+    IsAccountOwnerRule
   ],
 
   controllers: [AccountController]

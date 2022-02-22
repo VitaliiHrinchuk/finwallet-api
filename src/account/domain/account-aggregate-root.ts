@@ -3,6 +3,8 @@ import { AccountCreated } from "../events/account-created.event";
 import { AccountSetUser } from "../events/account-set-user.event";
 import { AccountDeleted } from "../events/account-deleted.event";
 import { AccountUpdated } from "../events/account-updated.event";
+import { AccountDebited } from "../events/account-debited.event";
+import { AccountCredited } from "../events/account-credited.event";
 
 export class AccountAggregateRoot extends AggregateRoot {
   public create(name: string, amount: number, currency: string, createdBy: string, hexColor?: string): void {
@@ -37,6 +39,28 @@ export class AccountAggregateRoot extends AggregateRoot {
 
     event.payload = {
       name, hexColor
+    };
+
+    this.record(event)
+  }
+
+  public debit(amount: number, transactionId: string) {
+    const event: AccountDebited = new AccountDebited();
+
+    event.payload = {
+      amount,
+      transactionId
+    };
+
+    this.record(event)
+  }
+
+  public credit(amount: number, transactionId: string) {
+    const event: AccountCredited = new AccountCredited();
+
+    event.payload = {
+      amount,
+      transactionId
     };
 
     this.record(event)
