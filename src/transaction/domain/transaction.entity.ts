@@ -4,13 +4,14 @@ import { AccountEntity } from "../../account/domain/account.entity";
 import { CategoryEntity } from "../../category/domain/category.entity";
 import { TagEntity } from "../../tag/domain/tag.entity";
 import { TransactionTag } from "../models/transaction-tag.model";
+import { DomainEntity } from "../../common/interfaces/domain-entity";
 
 export enum TransactionType {
   DEB = "DEB",
   CRE = "CRE"
 }
 
-export class TransactionEntity {
+export class TransactionEntity extends DomainEntity{
   id: string;
   currency: string;
   amount: number;
@@ -37,7 +38,8 @@ export class TransactionEntity {
   TransactionTag: any;
 
   constructor(partial: Partial<TransactionEntity>) {
-    Object.assign(this, partial);
+    // Object.assign(this, partial);
+    super(partial)
   }
 
   static fromJSON(partial: Partial<TransactionEntity>) {

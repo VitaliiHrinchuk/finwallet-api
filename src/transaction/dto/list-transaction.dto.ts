@@ -1,9 +1,10 @@
 import {
-  IsNotEmpty,
+  IsNotEmpty, IsNumber,
   IsOptional,
   IsUUID,
-  Length,
+  Length, Min
 } from "class-validator";
+import { Type } from "class-transformer";
 
 export class ListTransactionDto {
   @IsNotEmpty()
@@ -13,4 +14,13 @@ export class ListTransactionDto {
   @IsOptional()
   @IsUUID()
   accountId: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  limit: number = 10;
+
+  @IsOptional()
+  @Type(() => Number)
+  @Min(1)
+  page: number = 1;
 }

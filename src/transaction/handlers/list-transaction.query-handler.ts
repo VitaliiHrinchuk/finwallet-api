@@ -9,35 +9,39 @@ import { Op } from "sequelize";
 import { Account } from "../../account/models/account.model";
 import { Tag } from "../../tag/models/tag.model";
 import { Category } from "../../category/models/category.model";
+import { Pagination } from "../../common/pagination";
+import { QueryPaginator } from "../../common/helpers/query-paginator";
 
 @CommandHandler(ListTransactionQuery)
 export class ListTransactionQueryHandler implements ICommandHandler<ListTransactionQuery> {
 
   constructor(
-    @InjectModel(Transaction) private readonly transactions: typeof Transaction,
-    ) {}
+    @InjectModel(Transaction) private readonly transactions: typeof Transaction
+  ) {
+  }
 
   async execute(command: ListTransactionQuery): Promise<any> {
 
     const transactions = await this.queryTransactions(command);
 
-    return transactions.map(model => new TransactionEntity(model.toJSON()));
+    return transactions;
+   // return transactions.map(model => new TransactionEntity(model.toJSON()));
   }
 
-  private async queryTransactions(command: ListTransactionQuery): Promise<Transaction[]> {
-    return this.transactions.findAll({
-      where: {
-        userId: command.dto.userId
-      },
-      include: [
+  private async queryTransactions(command: ListTransactionQuery): Promise<Pagination<Transaction>> {
+    const query: QueryPaginator<Transaction> = new QueryPaginator<Transaction>(
+      Transaction,
+      TransactionEntity
+    );
+    return query
+      .where({ userId: command.dto.userId })
+      .include([
         User,
         Account,
         Tag,
         Category
-      ],
-      order: [
-        ['transaction_date', 'DESC']
-      ]
-    })
+      ])
+      .order([["transaction_date", "DESC"]])
+      .paginate(command.dto.limit, command.dto.page);
   }
 }

@@ -3,11 +3,13 @@ import { ListTransactionQueryHandler } from "./list-transaction.query-handler";
 import { ShowTransactionQueryHandler } from "./show-transaction.query-handler";
 import { DeleteTransactionCommandHandler } from "./delete-transaction.command-handler";
 import { UpdateTransactionCommandHandler } from "./update-transaction.command-handler";
+import { ImportTransactionsCommandHandler } from "./import-transactions.command-handler";
 
 export const commandHandlers = [
   CreateTransactionCommandHandler,
   ListTransactionQueryHandler,
   ShowTransactionQueryHandler,
   DeleteTransactionCommandHandler,
-  UpdateTransactionCommandHandler
+  UpdateTransactionCommandHandler,
+  ImportTransactionsCommandHandler
 ];
