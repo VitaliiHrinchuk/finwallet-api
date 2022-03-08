@@ -10,7 +10,8 @@ import { Account } from "../../account/models/account.model";
 import { Tag } from "../../tag/models/tag.model";
 import { Category } from "../../category/models/category.model";
 import { Pagination } from "../../common/pagination";
-import { QueryPaginator } from "../../common/helpers/query-paginator";
+import { QueryBuilder } from "../../common/helpers/query-builder";
+import { InternalServerErrorException } from "@nestjs/common";
 
 @CommandHandler(ListTransactionQuery)
 export class ListTransactionQueryHandler implements ICommandHandler<ListTransactionQuery> {
@@ -22,26 +23,46 @@ export class ListTransactionQueryHandler implements ICommandHandler<ListTransact
 
   async execute(command: ListTransactionQuery): Promise<any> {
 
-    const transactions = await this.queryTransactions(command);
+    try {
+      const transactions = await this.queryTransactions(command);
 
-    return transactions;
-   // return transactions.map(model => new TransactionEntity(model.toJSON()));
+      return transactions;
+    } catch (err) {
+      console.log('err', err);
+      throw new InternalServerErrorException();
+    }
   }
 
   private async queryTransactions(command: ListTransactionQuery): Promise<Pagination<Transaction>> {
-    const query: QueryPaginator<Transaction> = new QueryPaginator<Transaction>(
+    const query: QueryBuilder<Transaction> = new QueryBuilder<Transaction>(
       Transaction,
       TransactionEntity
     );
-    return query
-      .where({ userId: command.dto.userId })
-      .include([
-        User,
-        Account,
-        Tag,
-        Category
-      ])
-      .order([["transaction_date", "DESC"]])
+
+    query.where("userId",'=', command.dto.userId);
+
+    if (command.dto.accountId) {
+      query.where("accountId", '=', command.dto.accountId);
+    }
+
+    if (command.dto.categorySlug) {
+      query.where("$category.slug$", '=', command.dto.categorySlug);
+    }
+
+    if (command.dto.startDate) {
+      query.where("transactionDate", '>=', command.dto.startDate);
+    }
+
+    if (command.dto.endDate) {
+      query.where("transactionDate", '<=', command.dto.endDate);
+    }
+
+    return query.include([
+      User,
+      Account,
+      Tag,
+      Category
+    ]).order([["transaction_date", "DESC"]])
       .paginate(command.dto.limit, command.dto.page);
   }
 }

@@ -1,4 +1,5 @@
 import {
+  IsISO8601,
   IsNotEmpty, IsNumber,
   IsOptional,
   IsUUID,
@@ -14,6 +15,17 @@ export class ListTransactionDto {
   @IsOptional()
   @IsUUID()
   accountId: string;
+
+  @IsOptional()
+  categorySlug: string;
+
+  @IsOptional()
+  @IsISO8601()
+  startDate: string;
+
+  @IsOptional()
+  @IsISO8601()
+  endDate: string;
 
   @IsOptional()
   @Type(() => Number)
