@@ -7,8 +7,8 @@ export class ValidationException extends Error {
 
   public fields: ValidationExceptionField[];
 
-  constructor(fields: ValidationExceptionField[]) {
-    super("Some data was not entered correctly");
+  constructor(fields: ValidationExceptionField[], message?: string) {
+    super(message || "Some data was not entered correctly");
     this.fields = fields;
   }
 

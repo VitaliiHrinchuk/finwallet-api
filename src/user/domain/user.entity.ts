@@ -6,6 +6,7 @@ export class UserEntity {
   email: string;
   name: string;
   baseCurrency: string;
+  userConfigured: boolean;
 
   @Exclude()
   passHash: string;

@@ -16,7 +16,7 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next.handle()
       .pipe(catchError(error => {
         if (error instanceof ValidationException) {
-          throw new BadRequestException(error.toArray());
+          throw new BadRequestException(error.message ? error.message : error.toArray());
         } else if (error instanceof EntityNotFoundException) {
           throw new NotFoundException(error.message);
         } else if (error instanceof AccessDeniedException) {

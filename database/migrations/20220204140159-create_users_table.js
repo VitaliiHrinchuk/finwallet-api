@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.UUID
       },
       name: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING(255)
       },
       email: {
@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING(255)
       },
       base_currency: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING(3)
       },
       created_at: {

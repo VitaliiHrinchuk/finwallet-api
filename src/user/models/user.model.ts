@@ -25,6 +25,9 @@ export class User extends Model {
   @Column({field: 'base_currency'})
   baseCurrency: string
 
+  @Column({field: 'user_configured'})
+  userConfigured: boolean
+
   @Column({field: 'created_at'})
   createdAt: Date;
 
