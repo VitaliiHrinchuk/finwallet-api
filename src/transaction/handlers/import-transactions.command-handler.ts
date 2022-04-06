@@ -10,6 +10,8 @@ import { TransactionAggregateRoot } from "../domain/transaction-aggregate-root";
 import { CreateTransactionCommand } from "../commands/create-transaction.command";
 import { Account } from "../../account/models/account.model";
 import { CurrencyService } from "../../currency/currency.service";
+import { User } from "../../user/models/user.model";
+import * as moment from "moment";
 
 type CsvTransactionRow = {
   amount: number;
@@ -26,6 +28,7 @@ export class ImportTransactionsCommandHandler implements ICommandHandler<ImportT
     private currencyService: CurrencyService,
     @InjectModel(Transaction) private readonly transactions: typeof Transaction,
     @InjectModel(Account) private readonly accounts: typeof Account,
+    @InjectModel(User) private readonly users: typeof User,
   ) {}
 
   async execute(command: ImportTransactionsCommand): Promise<any> {
@@ -38,11 +41,8 @@ export class ImportTransactionsCommandHandler implements ICommandHandler<ImportT
       header: true,
       delimiter: ';'
     });
-    // console.log('p', parsedCsv);
 
     const formattedData: any[] = parsedCsv.data.filter((item: any) => item.amount && item.currency && item.category);
-
-
 
     for (const key in formattedData) {
       const transaction: TransactionAggregateRoot = new TransactionAggregateRoot();
@@ -50,15 +50,17 @@ export class ImportTransactionsCommandHandler implements ICommandHandler<ImportT
       const row: CsvTransactionRow = formattedData[key];
 
       const amountInAccountCurrency = await this.getAccountCurrencyAmount(row.amount, row.currency, command.dto.accountId);
+      const amountInBaseCurrency = await  this.getBaseCurrencyAmount(row.amount, row.currency, command.dto.userId);
 
       const date = row.date
-        ? new Date(row.date)
+        ? moment(row.date, 'DD.MM.YYYY').toDate()
         : new Date();
 
       transaction.create(
         row.amount,
         row.currency.toUpperCase(),
         amountInAccountCurrency,
+        amountInBaseCurrency,
         command.dto.accountId,
         command.dto.userId,
         row.category,
@@ -68,31 +70,9 @@ export class ImportTransactionsCommandHandler implements ICommandHandler<ImportT
         []
       );
 
-      await this.repository.save(transaction);
+     await this.repository.save(transaction);
     }
 
-
-    //
-    // const instance = await this.transactions.findOne({
-    //   where: {
-    //     id: command.dto.id,
-    //     userId: command.dto.userId
-    //   }
-    // });
-    //
-    // if (!instance) {
-    //   throw new EntityNotFoundException("Transaction");
-    // }
-    //
-    // const transaction: TransactionAggregateRoot = new TransactionAggregateRoot(command.dto.id);
-    //
-    // transaction.remove(
-    //   TransactionType[instance.transactionType],
-    //   instance.accountCurrencyAmount,
-    //   instance.accountId
-    // );
-
-    // return this.repository.save(transaction);
   }
 
   async getAccountCurrencyAmount(amount: number, currency: string, accountId: string) {
@@ -105,6 +85,15 @@ export class ImportTransactionsCommandHandler implements ICommandHandler<ImportT
     return this.currencyService.convert(account.currency, currency, amount);
   }
 
+  async getBaseCurrencyAmount(amount: number, currency: string, userId: string) {
+    const user: User = await this.users.findByPk(userId);
+
+    if (currency == user.baseCurrency) {
+      return amount;
+    }
+
+    return this.currencyService.convert(user.baseCurrency, currency, amount);
+  }
 
   async validate(command: ImportTransactionsCommand): Promise<void> {
 

@@ -16,6 +16,7 @@ export class TransactionEntity extends DomainEntity{
   currency: string;
   amount: number;
   accountCurrencyAmount: number;
+  baseCurrencyAmount: number;
   transactionType: TransactionType;
   note: string;
   transactionDate: Date;

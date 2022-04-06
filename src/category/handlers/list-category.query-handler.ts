@@ -6,6 +6,12 @@ import { Category } from "../models/category.model";
 import { User } from "../../user/models/user.model";
 import { CategoryEntity } from "../domain/category.entity";
 import { Op } from "sequelize";
+import { ListAccountsQuery } from "../../account/commands/list-accounts.query";
+import { Pagination } from "../../common/pagination";
+import { AccountEntity } from "../../account/domain/account.entity";
+import { QueryBuilder } from "../../common/helpers/query-builder";
+import { Account } from "../../account/models/account.model";
+import { InternalServerErrorException } from "@nestjs/common";
 
 @CommandHandler(ListCategoryQuery)
 export class ListCategoryQueryHandler implements ICommandHandler<ListCategoryQuery> {
@@ -15,31 +21,38 @@ export class ListCategoryQueryHandler implements ICommandHandler<ListCategoryQue
     ) {}
 
   async execute(command: ListCategoryQuery): Promise<any> {
-    const filters = this.createFilters(command);
-
-    const categoryModels = await this.categories.findAll({
-      where: filters,
-      include: [
-        {
-          model: User,
-        }
-      ]
-    });
-
-    return categoryModels.map(model => new CategoryEntity(model.toJSON()));
-  }
-
-  private createFilters(command: ListCategoryQuery): any {
-    const filters: any = {
-      createdBy: {
-        [Op.or]: [command.dto.userId, null]
-      }
-    };
-
-    if (command.dto.categoryType) {
-      filters.categoryType = command.dto.categoryType;
+    try {
+      return this.query(command);
+    } catch (error) {
+      console.log('err', error);
+      throw new InternalServerErrorException();
     }
-
-    return filters;
   }
+
+  async query(command: ListCategoryQuery): Promise<Pagination<CategoryEntity>> {
+    const query: QueryBuilder<Category> = new QueryBuilder<Category>(
+      Category,
+      CategoryEntity
+    );
+
+    query.where("categoryType",'=', command.dto.categoryType);
+    // query.where("categoryType",'=', command.dto.categoryType);
+
+    return query.order([["updatedAt", "DESC"]])
+      .paginate(100, 1);
+  }
+
+  // private createFilters(command: ListCategoryQuery): any {
+  //   const filters: any = {
+  //     createdBy: {
+  //       [Op.or]: [command.dto.userId, null]
+  //     }
+  //   };
+  //
+  //   if (command.dto.categoryType) {
+  //     filters.categoryType = command.dto.categoryType;
+  //   }
+  //
+  //   return filters;
+  // }
 }

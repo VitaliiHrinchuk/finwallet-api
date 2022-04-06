@@ -23,6 +23,7 @@ export class CreateTransactionCommandHandler implements ICommandHandler<CreateTr
     private currencyService: CurrencyService,
     @InjectModel(Transaction) private readonly transactions: typeof Transaction,
     @InjectModel(Account) private readonly accounts: typeof Account,
+    @InjectModel(User) private readonly users: typeof User,
   ) {}
 
   async execute(command: CreateTransactionCommand): Promise<any> {
@@ -30,6 +31,8 @@ export class CreateTransactionCommandHandler implements ICommandHandler<CreateTr
     const transaction: TransactionAggregateRoot = new TransactionAggregateRoot();
 
     const amountInAccountCurrency = await this.getAccountCurrencyAmount(command);
+    const amountInBaseCurrency = await  this.getBaseCurrencyAmount(command);
+
     const date = command.dto.date
       ? command.dto.date
       : new Date();
@@ -38,6 +41,7 @@ export class CreateTransactionCommandHandler implements ICommandHandler<CreateTr
       command.dto.amount,
       command.dto.currency.toUpperCase(),
       amountInAccountCurrency,
+      amountInBaseCurrency,
       command.dto.accountId,
       command.dto.userId,
       command.dto.categorySlug,
@@ -66,6 +70,16 @@ export class CreateTransactionCommandHandler implements ICommandHandler<CreateTr
     }
 
     return this.currencyService.convert(account.currency, command.dto.currency, command.dto.amount);
+  }
+
+  async getBaseCurrencyAmount(command: CreateTransactionCommand) {
+    const user: User = await this.users.findByPk(command.dto.userId);
+
+    if (command.dto.currency == user.baseCurrency) {
+      return command.dto.amount;
+    }
+
+    return this.currencyService.convert(user.baseCurrency, command.dto.currency, command.dto.amount);
   }
 
   async validate(command: CreateTransactionCommand): Promise<void> {

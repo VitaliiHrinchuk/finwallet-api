@@ -70,6 +70,7 @@ export class TransactionProjector extends Projector {
       currency: event.payload.currency,
       amount: event.payload.amount,
       accountCurrencyAmount: event.payload.accountCurrencyAmount,
+      baseCurrencyAmount: event.payload.baseCurrencyAmount,
       transactionType: event.payload.transactionType,
       transactionDate: new Date(event.payload.transactionDate),
       note: event.payload.note,

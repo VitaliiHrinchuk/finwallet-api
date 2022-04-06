@@ -1,4 +1,16 @@
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors, Request, Param, Delete, Put } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  UseInterceptors,
+  Request,
+  Param,
+  Delete,
+  Put,
+  Query
+} from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { CreateAccountDto } from "./dto/create-account.dto";
 import { CreateAccountCommand } from "./commands/create-account.command";
@@ -11,6 +23,7 @@ import { DeleteAccountCommand } from "./commands/delete-account.command";
 import { SetEntityIdInterceptor } from "../common/interceptors/set-entity-id-interceptor";
 import { UpdateAccountCommand } from "./commands/update-account.command";
 import { UpdateAccountDto } from "./dto/update-account.dto";
+import { ListAccountDto } from "./dto/list-account.dto";
 
 @Controller('accounts')
 export class AccountController {
@@ -26,8 +39,9 @@ export class AccountController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async browse(@Request() req) {
-    return this.commandBus.execute(new ListAccountsQuery(req.user.userId));
+  @UseInterceptors(SetUserIdInterceptor)
+  async browse(@Query() dto: ListAccountDto) {
+    return this.commandBus.execute(new ListAccountsQuery(dto));
   }
 
   @Get(':id')

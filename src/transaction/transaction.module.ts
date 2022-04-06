@@ -11,6 +11,7 @@ import { Account } from "../account/models/account.model";
 import { Category } from "../category/models/category.model";
 import { TransactionTag } from "./models/transaction-tag.model";
 import { Tag } from "../tag/models/tag.model";
+import { User } from "src/user/models/user.model";
 
 
 @Module({
@@ -20,7 +21,8 @@ import { Tag } from "../tag/models/tag.model";
       Account,
       Category,
       TransactionTag,
-      Tag
+      Tag,
+      User
     ]),
     CqrsModule,
     EventSourcingModule.forFeature(handlersMapNodes),

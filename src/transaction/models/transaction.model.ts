@@ -34,6 +34,9 @@ export class Transaction extends Model {
   @Column({field: 'account_currency_amount'})
   accountCurrencyAmount: number;
 
+  @Column({field: 'base_currency_amount'})
+  baseCurrencyAmount: number;
+
   @Column({field: 'transaction_type'})
   transactionType: string;
 
