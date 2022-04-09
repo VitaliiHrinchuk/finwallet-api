@@ -33,14 +33,14 @@ export class TransactionEntity extends DomainEntity{
   category: CategoryEntity;
 
   @Type(() => TagEntity)
-  tags: TagEntity[] = [];
+  tags: TagEntity[];
 
   @Exclude()
   TransactionTag: any;
 
   constructor(partial: Partial<TransactionEntity>) {
     // Object.assign(this, partial);
-    super(partial)
+    super(partial);
   }
 
   static fromJSON(partial: Partial<TransactionEntity>) {

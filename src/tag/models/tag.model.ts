@@ -10,6 +10,8 @@ import {
   Table
 } from "sequelize-typescript";
 import { User } from "../../user/models/user.model";
+import { TransactionTag } from "../../transaction/models/transaction-tag.model";
+import { Transaction } from "../../transaction/models/transaction.model";
 
 @Table({
   timestamps: true,
@@ -38,6 +40,5 @@ export class Tag extends Model {
 
   @BelongsTo(() => User)
   owner: User
-
 
 }

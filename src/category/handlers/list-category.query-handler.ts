@@ -35,7 +35,9 @@ export class ListCategoryQueryHandler implements ICommandHandler<ListCategoryQue
       CategoryEntity
     );
 
-    query.where("categoryType",'=', command.dto.categoryType);
+    if (command.dto.categoryType) {
+      query.where("categoryType",'=', command.dto.categoryType);
+    }
     // query.where("categoryType",'=', command.dto.categoryType);
 
     return query.order([["updatedAt", "DESC"]])

@@ -5,7 +5,6 @@ export class TagEntity {
   id: string;
   name: string;
   slug: string;
-  categoryType: number
   createdAt: Date;
   updatedAt: Date;
 

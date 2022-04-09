@@ -16,6 +16,7 @@ export class ListCategoryDto {
   userId: string;
 
   @IsNotEmpty()
+  @IsOptional()
   @Length(3, 3)
   categoryType: string
 }

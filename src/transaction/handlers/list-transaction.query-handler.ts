@@ -12,6 +12,7 @@ import { Category } from "../../category/models/category.model";
 import { Pagination } from "../../common/pagination";
 import { QueryBuilder } from "../../common/helpers/query-builder";
 import { InternalServerErrorException } from "@nestjs/common";
+import { TransactionTag } from "../models/transaction-tag.model";
 
 @CommandHandler(ListTransactionQuery)
 export class ListTransactionQueryHandler implements ICommandHandler<ListTransactionQuery> {
@@ -25,7 +26,6 @@ export class ListTransactionQueryHandler implements ICommandHandler<ListTransact
 
     try {
       const transactions = await this.queryTransactions(command);
-
       return transactions;
     } catch (err) {
       console.log('err', err);
@@ -57,6 +57,9 @@ export class ListTransactionQueryHandler implements ICommandHandler<ListTransact
       query.where("transactionDate", '<=', command.dto.endDate);
     }
 
+    if (command.dto.type) {
+      query.where("transactionType", '=', command.dto.type);
+    }
     return query.include([
       User,
       Account,

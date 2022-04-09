@@ -1,4 +1,5 @@
 import {
+  IsEnum,
   IsISO8601,
   IsNotEmpty, IsNumber,
   IsOptional,
@@ -6,6 +7,7 @@ import {
   Length, Min
 } from "class-validator";
 import { Type } from "class-transformer";
+import { TransactionType } from "../domain/transaction.entity";
 
 export class ListTransactionDto {
   @IsNotEmpty()
@@ -18,6 +20,10 @@ export class ListTransactionDto {
 
   @IsOptional()
   categorySlug: string;
+
+  @IsEnum(TransactionType)
+  @IsNotEmpty()
+  type: TransactionType
 
   @IsOptional()
   @IsISO8601()

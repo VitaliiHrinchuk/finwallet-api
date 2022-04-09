@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { Tag } from "../../tag/models/tag.model";
 import { Transaction } from "./transaction.model";
 
@@ -24,5 +24,8 @@ export class TransactionTag extends Model {
   @ForeignKey(() => Tag)
   @Column({field: 'tag_id'})
   tagId: string;
+
+  @BelongsTo(() => Tag)
+  tag: Tag;
 
 }

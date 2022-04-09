@@ -20,7 +20,7 @@ import { Tag } from "../../tag/models/tag.model";
   timestamps: true,
   tableName: 'transactions'
 })
-export class Transaction extends Model {
+  export class Transaction extends Model {
 
   @Column({ primaryKey: true, autoIncrement: false })
   id: string;

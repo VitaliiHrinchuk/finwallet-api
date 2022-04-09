@@ -21,6 +21,8 @@ const Operators: OperatorsType = {
   '=': Op.eq,
   '>=': Op.gte,
   '<=': Op.lte,
+  '>': Op.gt,
+  '<': Op.lt
 }
 
 export class QueryBuilder<T extends Model<T>> {
@@ -76,7 +78,6 @@ export class QueryBuilder<T extends Model<T>> {
 
     this.query.limit = limit;
     this.query.offset = (page - 1) * limit;
-    console.log('q', this.query);
     const result: FindResponse<T> = await this.model.findAndCountAll(this.query);
     const mapped: any[] = result.rows.map(row => new this.entity(row.toJSON()));
 
@@ -91,11 +92,26 @@ export class QueryBuilder<T extends Model<T>> {
   private queryWhereClause(key: string, op: string, value: any): void {
     console.log('op', op, key);
     if(Operators[op] == Op.eq) {
-      this.whereClause[key] = value;
+      //this.whereClause[key] = value;
+      this._setWhereParameter(key, value);
     } else {
-      this.whereClause[key] = {
+      // this.whereClause[key] = {
+      //   [Operators[op]]: value
+      // };
+      this._setWhereParameter(key, {
         [Operators[op]]: value
+      });
+    }
+  }
+  private _setWhereParameter(key, value) {
+    if (this.whereClause[key]) {
+      this.whereClause[key] = {
+        [Op.and]: {
+          ...this.whereClause[key]
+        }
       };
+    } else {
+      this.whereClause[key] = value;
     }
   }
 
