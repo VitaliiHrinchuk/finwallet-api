@@ -24,11 +24,21 @@ import { SetEntityIdInterceptor } from "../common/interceptors/set-entity-id-int
 import { UpdateAccountCommand } from "./commands/update-account.command";
 import { UpdateAccountDto } from "./dto/update-account.dto";
 import { ListAccountDto } from "./dto/list-account.dto";
+import { FetchAnalyticsQuery } from "./commands/fetch-analytics.query";
+import { FetchAnalyticsDto } from "./dto/fetch-analytics.dto";
 
 @Controller('accounts')
 export class AccountController {
 
   constructor(private commandBus: CommandBus) {}
+
+
+  @Get('analytics')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(SetUserIdInterceptor)
+  async analytics(@Query() dto: FetchAnalyticsDto) {
+    return this.commandBus.execute(new FetchAnalyticsQuery(dto));
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -66,4 +76,5 @@ export class AccountController {
   async update(@Body() updateAccountDto: UpdateAccountDto) {
     return this.commandBus.execute(new UpdateAccountCommand(updateAccountDto));
   }
+
 }
