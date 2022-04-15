@@ -23,6 +23,7 @@ export class ListTransactionDto {
 
   @IsEnum(TransactionType)
   @IsNotEmpty()
+  @IsOptional()
   type: TransactionType
 
   @IsOptional()

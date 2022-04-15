@@ -24,7 +24,7 @@ export class FetchAnalyticsQueryHandler implements ICommandHandler<FetchAnalytic
         endDate: new Date(command.dto.endDate),
         transactionType: TransactionType.CRE
       });
-
+      console.log('fetch', command.dto);
       return {
         data: result
       };

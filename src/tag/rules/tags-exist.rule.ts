@@ -11,7 +11,9 @@ export class TagsExistRule implements ValidatorConstraintInterface {
 
   async validate(slugs: string[]) {
     try {
-
+      if (slugs.length == 0) {
+        return true;
+      }
       const tags = await this.tags.findAll({
         where: {
           slug: {

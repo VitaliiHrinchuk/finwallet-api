@@ -52,7 +52,7 @@ export class AnalyticsCreator {
           ]
         }
       },
-      attributes: ["category.id", [Sequelize.fn("sum", Sequelize.col("base_currency_amount")), "sum"]],
+      attributes: ["category.id", [Sequelize.col("category.name"), "name"], [Sequelize.fn("sum", Sequelize.col("base_currency_amount")), "sum"]],
       include: [
         Category
       ],
