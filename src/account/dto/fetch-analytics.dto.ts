@@ -23,4 +23,7 @@ export class FetchAnalyticsDto {
   @IsEnum(AnalyticsType)
   @IsNotEmpty()
   type: AnalyticsType
+
+  @IsOptional()
+  accountId: string;
 }

@@ -4,14 +4,14 @@ import { Account } from "../models/account.model";
 import { Transaction } from "../../transaction/models/transaction.model";
 import { Category } from "../../category/models/category.model";
 import { AnalyticsFilters } from "./analytics-filters";
-import { Op } from "sequelize";
+import { Op, WhereOptions } from "sequelize";
 import * as moment from "moment";
 import { BadRequestException } from "@nestjs/common";
 
 export enum AnalyticsType {
   category = 'category',
-  summaryCurrency = 'summaryCurrency',
-  summaryDate = 'summaryDate',
+  currency = 'currency',
+  date = 'date',
 };
 
 export class AnalyticsCreator {
@@ -29,10 +29,10 @@ export class AnalyticsCreator {
         }
         return this.summaryByCategories(filters).then(items => items.map(item => item.toJSON()));
 
-      case AnalyticsType.summaryCurrency:
+      case AnalyticsType.currency:
         return this.summaryByCurrency().then(items => items.map(item => item.toJSON()));
 
-      case AnalyticsType.summaryDate:
+      case AnalyticsType.date:
         if (!filters.startDate || !filters.endDate || !filters.transactionType) {
           throw new BadRequestException('Provide all required filters');
         }
@@ -42,17 +42,29 @@ export class AnalyticsCreator {
   };
 
   async summaryByCategories(filters: AnalyticsFilters): Promise<Transaction[]> {
+
+    const where: WhereOptions  = {
+      transactionType: filters.transactionType.toString(),
+      transactionDate: {
+        [Op.between]: [
+          filters.startDate,
+          filters.endDate
+        ]
+      }
+    };
+
+    if (filters.accountId) {
+      where['accountId'] = filters.accountId;
+    }
+
     return this.transactions.findAll({
-      where: {
-        transactionType: filters.transactionType.toString(),
-        transactionDate: {
-          [Op.between]: [
-            filters.startDate,
-            filters.endDate
-          ]
-        }
-      },
-      attributes: ["category.id", [Sequelize.col("category.name"), "name"], [Sequelize.fn("sum", Sequelize.col("base_currency_amount")), "sum"]],
+      where: where,
+      attributes: [
+        "category.id",
+        [Sequelize.col("category.name"), "name"],
+        [Sequelize.col("category.slug"), "slug"],
+        [Sequelize.fn("sum", Sequelize.col("base_currency_amount")), "sum"],
+      ],
       include: [
         Category
       ],
@@ -63,27 +75,35 @@ export class AnalyticsCreator {
   async summaryByDate(filters: AnalyticsFilters): Promise<Transaction[]> {
     const startDate = moment(filters.startDate);
     const endDate = moment(filters.endDate);
-
     const result = [];
 
+    const where: WhereOptions  = {
+      transactionType: filters.transactionType.toString(),
+      transactionDate: {
+        [Op.between]: [
+          filters.startDate,
+          filters.endDate
+        ]
+      }
+    };
+
+    if (filters.accountId) {
+      where['accountId'] = filters.accountId;
+    }
+
     const summarizedTransactions: Transaction[] = await this.transactions.findAll({
-      where: {
-        transactionType: filters.transactionType.toString(),
-        transactionDate: {
-          [Op.between]: [
-            filters.startDate,
-            filters.endDate
-          ]
-        }
-      },
-      attributes: ['transactionDate', [Sequelize.fn("sum", Sequelize.col("base_currency_amount")), "sum"]],
-      group: ["transactionDate"]
+      where: where,
+      attributes: [
+        [Sequelize.fn('date_trunc', 'day', Sequelize.col('transaction_date')), 'date'],
+        [Sequelize.fn("sum", Sequelize.col("base_currency_amount")), "sum"]
+      ],
+      group: [Sequelize.fn('date_trunc', 'day', Sequelize.col('transaction_date'))]
     });
 
     for (const m = moment(startDate); m.isBefore(endDate); m.add(1, 'days')) {
       const formattedDate = m.format('YYYY-MM-DD');
       const valueIndex: number = summarizedTransactions.findIndex(
-        item => moment(item.transactionDate).format('YYYY-MM-DD') == formattedDate
+        item => moment(item.getDataValue('date')).format('YYYY-MM-DD') == formattedDate
       );
 
       if (valueIndex != -1) {

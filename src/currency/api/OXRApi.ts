@@ -2,6 +2,7 @@ import { CurrencyApiInterface } from "./CurrencyApiInterface";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "nestjs-http-promise";
+import { rethrow } from "@nestjs/core/helpers/rethrow";
 
 
 @Injectable()
@@ -19,14 +20,24 @@ export class OXRApi implements CurrencyApiInterface {
 
 
   async fetchLatest(baseCurrency: string): Promise<any> {
-    const response = await this.httpService.get(this.path + 'latest.json', {
-      params: {
+    try {
+      console.log('p', {
         app_id: this.appId,
         base: baseCurrency
-      }
-    });
+      });
+      const response = await this.httpService.get(this.path + 'latest.json', {
+        params: {
+          app_id: this.appId,
+          base: baseCurrency
+        }
+      });
 
-    return response.data;
+      return response.data;
+    } catch (error) {
+      console.log('error', error.message);
+      throw error;
+    }
+
   }
 
 }

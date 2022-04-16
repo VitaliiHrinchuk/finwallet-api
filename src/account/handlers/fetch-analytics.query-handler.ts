@@ -22,7 +22,8 @@ export class FetchAnalyticsQueryHandler implements ICommandHandler<FetchAnalytic
       const result: Model[] = await this.analytics.fetch(command.dto.type, {
         startDate: new Date(command.dto.startDate),
         endDate: new Date(command.dto.endDate),
-        transactionType: TransactionType.CRE
+        transactionType: TransactionType.CRE,
+        accountId: command.dto.accountId
       });
       console.log('fetch', command.dto);
       return {

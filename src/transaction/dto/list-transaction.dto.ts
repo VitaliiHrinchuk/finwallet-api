@@ -15,7 +15,6 @@ export class ListTransactionDto {
   userId: string;
 
   @IsOptional()
-  @IsUUID()
   accountId: string;
 
   @IsOptional()

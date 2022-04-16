@@ -9,7 +9,7 @@ import {
   Param,
   Delete,
   Put,
-  Query
+  Query, Patch
 } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { CreateAccountDto } from "./dto/create-account.dto";
@@ -69,7 +69,7 @@ export class AccountController {
     return this.commandBus.execute(new DeleteAccountCommand(deleteAccountDto));
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(SetUserIdInterceptor)
   @UseInterceptors(SetEntityIdInterceptor)

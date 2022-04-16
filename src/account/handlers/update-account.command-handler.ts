@@ -6,6 +6,7 @@ import { UpdateAccountCommand } from "../commands/update-account.command";
 import { AccessDeniedException, EntityNotFoundException } from "../../common/exceptions";
 import { InjectModel } from "@nestjs/sequelize";
 import { Account } from "../models/account.model";
+import { AccountEntity } from "../domain/account.entity";
 
 @CommandHandler(UpdateAccountCommand)
 export class UpdateAccountCommandHandler implements ICommandHandler<UpdateAccountCommand> {
@@ -17,7 +18,7 @@ export class UpdateAccountCommandHandler implements ICommandHandler<UpdateAccoun
 
   async execute(command: UpdateAccountCommand): Promise<any> {
     await this.validate(command);
-
+    console.log('dto', command.dto);
     const account: AccountAggregateRoot = new AccountAggregateRoot(command.dto.id);
 
     account.update(
@@ -25,8 +26,11 @@ export class UpdateAccountCommandHandler implements ICommandHandler<UpdateAccoun
       command.dto.hexColor,
     );
 
+    await this.repository.save(account);
 
-    return this.repository.save(account);
+    const newInstance: Account = await this.accounts.findByPk(account.getId());
+
+    return new AccountEntity(newInstance.toJSON());
   }
 
   async validate(command: UpdateAccountCommand): Promise<void> {
