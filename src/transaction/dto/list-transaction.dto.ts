@@ -1,13 +1,16 @@
 import {
-  IsEnum,
+  IsArray,
+  IsEnum, IsIn,
   IsISO8601,
   IsNotEmpty, IsNumber,
   IsOptional,
   IsUUID,
-  Length, Min
+  Length, Min, ValidateIf
 } from "class-validator";
 import { Type } from "class-transformer";
 import { TransactionType } from "../domain/transaction.entity";
+import { IsNullable } from "../../common/rules/is-nullable";
+
 
 export class ListTransactionDto {
   @IsNotEmpty()
@@ -15,14 +18,13 @@ export class ListTransactionDto {
   userId: string;
 
   @IsOptional()
-  accountId: string;
+  accounts: string[];
 
   @IsOptional()
-  categorySlug: string;
+  categories: string[];
 
-  @IsEnum(TransactionType)
-  @IsNotEmpty()
   @IsOptional()
+  @IsIn(["CRE", "DEB"])
   type: TransactionType
 
   @IsOptional()

@@ -25,7 +25,7 @@ export class FetchAnalyticsQueryHandler implements ICommandHandler<FetchAnalytic
         transactionType: TransactionType.CRE,
         accountId: command.dto.accountId
       });
-      console.log('fetch', command.dto);
+
       return {
         data: result
       };

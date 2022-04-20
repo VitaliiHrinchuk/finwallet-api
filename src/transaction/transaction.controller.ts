@@ -45,6 +45,7 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(SetUserIdInterceptor)
   async browse(@Query() listTransactionDto: ListTransactionDto) {
+    console.log('lss', listTransactionDto);
     return this.commandBus.execute(new ListTransactionQuery(listTransactionDto));
   }
 

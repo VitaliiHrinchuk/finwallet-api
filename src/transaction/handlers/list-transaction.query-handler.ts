@@ -25,6 +25,7 @@ export class ListTransactionQueryHandler implements ICommandHandler<ListTransact
   async execute(command: ListTransactionQuery): Promise<any> {
 
     try {
+      console.log("type",command.dto);
       const transactions = await this.queryTransactions(command);
       return transactions;
     } catch (err) {
@@ -41,12 +42,13 @@ export class ListTransactionQueryHandler implements ICommandHandler<ListTransact
 
     query.where("userId",'=', command.dto.userId);
 
-    if (command.dto.accountId) {
-      query.where("accountId", '=', command.dto.accountId);
+    if (command.dto.accounts) {
+
+      query.where("accountId", 'in', command.dto.accounts);
     }
 
-    if (command.dto.categorySlug) {
-      query.where("$category.slug$", '=', command.dto.categorySlug);
+    if (command.dto.categories) {
+      query.where("$category.slug$", 'in', command.dto.categories);
     }
 
     if (command.dto.startDate) {

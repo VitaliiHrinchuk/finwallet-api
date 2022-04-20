@@ -22,7 +22,8 @@ const Operators: OperatorsType = {
   '>=': Op.gte,
   '<=': Op.lte,
   '>': Op.gt,
-  '<': Op.lt
+  '<': Op.lt,
+  'in': Op.in
 }
 
 export class QueryBuilder<T extends Model<T>> {
@@ -90,14 +91,15 @@ export class QueryBuilder<T extends Model<T>> {
   }
 
   private queryWhereClause(key: string, op: string, value: any): void {
-    console.log('op', op, key);
+    console.log('op', op, key, value);
     if(Operators[op] == Op.eq) {
-      //this.whereClause[key] = value;
+
       this._setWhereParameter(key, value);
+    } else if(Operators[op] == Op.in && typeof value == 'string') {
+      this._setWhereParameter(key, {
+        [Operators[op]]: [value]
+      });
     } else {
-      // this.whereClause[key] = {
-      //   [Operators[op]]: value
-      // };
       this._setWhereParameter(key, {
         [Operators[op]]: value
       });
@@ -120,7 +122,7 @@ export class QueryBuilder<T extends Model<T>> {
     this.query.where = {
       [whereSymbol]: this.whereClause
     };
-
+    console.log(this.query.where );
   };
 
 
