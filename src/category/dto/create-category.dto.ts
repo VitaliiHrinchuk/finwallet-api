@@ -21,5 +21,5 @@ export class CreateCategoryDto {
 
   @IsEnum(CategoryType)
   @IsNotEmpty()
-  categoryType: CategoryType;
+  type: CategoryType;
 }

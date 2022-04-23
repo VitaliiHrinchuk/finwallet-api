@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+  UseInterceptors
+} from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { SetUserIdInterceptor } from "../common/interceptors/set-user-id-interceptor";
@@ -45,7 +57,7 @@ export class TagController {
     return this.commandBus.execute(new DeleteTagCommand(deleteTagDto));
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(SetUserIdInterceptor)
   @UseInterceptors(SetEntityIdInterceptor)

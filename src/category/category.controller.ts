@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  Param, Patch,
   Post,
   Put,
   Query,
@@ -60,7 +60,7 @@ export class CategoryController {
     return this.commandBus.execute(new DeleteCategoryCommand(deleteCategoryDto));
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(SetUserIdInterceptor)
   @UseInterceptors(SetEntityIdInterceptor)

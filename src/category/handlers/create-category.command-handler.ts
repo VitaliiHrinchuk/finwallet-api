@@ -23,11 +23,11 @@ export class CreateCategoryCommandHandler implements ICommandHandler<CreateCateg
     const category: CategoryAggregateRoot = new CategoryAggregateRoot();
 
     const slug: string = this.generateSlug(command.dto.name)
-
+    console.log('dto', command.dto);
     category.create(
       command.dto.name,
       slug,
-      command.dto.categoryType.toString(),
+      command.dto.type.toString(),
       command.dto.userId,
     );
 

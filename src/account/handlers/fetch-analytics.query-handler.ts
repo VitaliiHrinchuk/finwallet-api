@@ -23,7 +23,8 @@ export class FetchAnalyticsQueryHandler implements ICommandHandler<FetchAnalytic
         startDate: new Date(command.dto.startDate),
         endDate: new Date(command.dto.endDate),
         transactionType: TransactionType.CRE,
-        accountId: command.dto.accountId
+        accountId: command.dto.accountId,
+        userId: command.dto.userId
       });
 
       return {

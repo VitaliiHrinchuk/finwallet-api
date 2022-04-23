@@ -4,5 +4,6 @@ export interface AnalyticsFilters {
   startDate: Date,
   endDate: Date,
   accountId?: string,
-  transactionType?: TransactionType
+  transactionType?: TransactionType,
+  userId: string
 }

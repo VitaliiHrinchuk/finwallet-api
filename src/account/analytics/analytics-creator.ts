@@ -30,7 +30,7 @@ export class AnalyticsCreator {
         return this.summaryByCategories(filters).then(items => items.map(item => item.toJSON()));
 
       case AnalyticsType.currency:
-        return this.summaryByCurrency().then(items => items.map(item => item.toJSON()));
+        return this.summaryByCurrency(filters).then(items => items.map(item => item.toJSON()));
 
       case AnalyticsType.date:
         if (!filters.startDate || !filters.endDate || !filters.transactionType) {
@@ -45,6 +45,7 @@ export class AnalyticsCreator {
 
     const where: WhereOptions  = {
       transactionType: filters.transactionType.toString(),
+      userId: filters.userId,
       transactionDate: {
         [Op.between]: [
           filters.startDate,
@@ -79,6 +80,7 @@ export class AnalyticsCreator {
 
     const where: WhereOptions  = {
       transactionType: filters.transactionType.toString(),
+      userId: filters.userId,
       transactionDate: {
         [Op.between]: [
           filters.startDate,
@@ -124,8 +126,11 @@ export class AnalyticsCreator {
   }
 
 
-  async summaryByCurrency(): Promise<Account[]> {
+  async summaryByCurrency(filters: AnalyticsFilters): Promise<Account[]> {
     return this.accounts.findAll({
+      where: {
+        createdBy: filters.userId,
+      },
       attributes: ["currency", [Sequelize.fn("sum", Sequelize.col("amount")), "sum"]],
       group: ["currency"]
     });
